@@ -1,19 +1,7 @@
-'use strict'
+import {createStore, applyMiddleware} from 'redux'
+import {guid} from 'utils'
 
-const actions = require('../actions/GameActions')
-const GameReducer = require('../reducers/GameReducer')
-const Redux = require('redux')
-const Guid = require('guid')
-
-const {
-  createGameInitAction,
-  createPlayerConnectedAction,
-  createPlayerDisconnectedAction
-} = actions
-
-const {createStore, applyMiddleware} = Redux
-
-module.exports = function createGame(){
+export default function createGame(){
 
   let clients = []
 
@@ -25,23 +13,23 @@ module.exports = function createGame(){
       return next(action)
     }
   }
-  const store = createStore(GameReducer, undefined, applyMiddleware(broadcaster))
+  const store = createStore((state)=>{return state}, undefined, applyMiddleware(broadcaster))
 
   let gameStarted = ()=>{}
 
   let clientConnected = (ws)=>{
     const client = {
       ws,
-      guid : Guid.raw()
+      guid : guid()
     }
 
     ws.on('close', () => {
       clients = clients.filter((cl) => cl.ws !== ws)
-      store.dispatch(createPlayerDisconnectedAction(client.guid))
+      //store.dispatch(createPlayerDisconnectedAction(client.guid))
     });
     ws.on('message', (msg) => {})
-    store.dispatch(createPlayerConnectedAction(client.guid))
-    ws.send(JSON.stringify(createGameInitAction(store.getState().toJS())))
+    //store.dispatch(createPlayerConnectedAction(client.guid))
+    //ws.send(JSON.stringify(createGameInitAction(store.getState().toJS())))
     clients.push(client)
   }
 

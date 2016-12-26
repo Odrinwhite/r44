@@ -1,8 +1,9 @@
 {
-  "presets": ["es2015"],
-  "plugins": [
-    ["transform-react-jsx", {
-      "pragma": "element"
-    }]
-  ]
+  "presets": [
+    "react"
+  ],
+  "plugins": ["transform-class-properties",
+    "transform-decorators-legacy",
+    ["transform-object-rest-spread", { "useBuiltIns": true }],
+    "transform-function-bind"]
 }
